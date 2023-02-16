@@ -11,8 +11,8 @@ class QuizAccessor(BaseAccessor):
         return theme
 
     async def get_theme_by_title(self, title: str) -> Optional[Theme]:
-
-        return theme
+        pass
+        # return theme
 
     async def get_theme_by_id(self, id_: int) -> Optional[Theme]:
         raise NotImplementedError
