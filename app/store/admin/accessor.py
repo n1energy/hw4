@@ -20,13 +20,14 @@ class AdminAccessor(BaseAccessor):
         return None
 
     async def get_by_email(self, email: str) -> Optional[Admin]:
-        # next(user.salary for user in userList if user.name == 'john')
         for admin in self.app.database.admins:
             if admin.email == email:
                 return admin
         return None
 
     async def create_admin(self, email: str, password: str) -> Admin:
-        # admin = Admin(email=)
-        # return admin
-        pass
+        encoded_password = sha256(str(password).encode()).hexdigest()
+        admin = Admin(id=self.app.database.next_admin_id, email=email, password=encoded_password)
+        self.app.database.admins.append(admin)
+        return admin
+
