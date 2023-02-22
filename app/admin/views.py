@@ -1,4 +1,4 @@
-from aiohttp.web_exceptions import HTTPUnauthorized
+from aiohttp.web_exceptions import HTTPUnauthorized, HTTPForbidden
 from aiohttp_apispec import request_schema, response_schema, docs
 
 from app.web.app import View
@@ -16,7 +16,11 @@ class AdminLoginView(View):
         admin = await self.store.admins.get_by_email(self.data['email'])
         if not admin or not admin.is_password_valid(self.data['password']):
             raise HTTPForbidden
-        return json_response(AdminSchema().dump(admin))
+        # return json_response(AdminSchema().dump(admin))
+
+        admin_json = AdminSchema().dump(admin)
+        # session['admin'] = admin_json
+        return json_response(data=admin_json)
 
 
 class AdminCurrentView(View):

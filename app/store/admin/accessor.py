@@ -12,16 +12,12 @@ if typing.TYPE_CHECKING:
 
 class AdminAccessor(BaseAccessor):
     async def connect(self, app: "Application"):
-        password_encoded = sha256(b"Nobody inspects the spammish repetition").hexdigest()
-        admin = Admin(id=self.app.database.next_admin_id, email=self.app.config.admin.email,
-                      password=sha256(self.app.config.admin.password.encode()).hexdigest())
+        admin = await self.create_admin(email=self.app.config.admin.email, password=self.app.config.admin.password)
         self.app.database.admins.append(admin)
-        # TODO: создать админа по данным в config.yml здесь
-        return None
 
     async def get_by_email(self, email: str) -> Optional[Admin]:
         for admin in self.app.database.admins:
-            if admin.email == email:
+            if admin.email == str(email):
                 return admin
         return None
 
@@ -30,4 +26,3 @@ class AdminAccessor(BaseAccessor):
         admin = Admin(id=self.app.database.next_admin_id, email=email, password=encoded_password)
         self.app.database.admins.append(admin)
         return admin
-
